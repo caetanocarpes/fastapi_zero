@@ -1,5 +1,15 @@
 from http import HTTPStatus
 
+import pytest
+from fastapi.testclient import TestClient
+
+from fastapi_zero.app import app
+
+
+@pytest.fixture
+def client():
+    return TestClient(app)
+
 
 def test_root_deve_retornar_ola_mundo(client):
     response = client.get('/')
@@ -62,3 +72,16 @@ def test_delete_user(client):
 
     assert response.status_code == HTTPStatus.OK
     assert response.json() == {'message': 'User deleted'}
+
+
+def test_update_user_should_return_not_found__exercicio(client):
+    response = client.put(
+        '/users/666',
+        json={
+            'username': 'bob',
+            'email': 'bob@example.com',
+            'password': 'mynewpassword',
+        },
+    )
+    assert response.status_code == HTTPStatus.NOT_FOUND
+    assert response.json() == {'detail': 'Não achei nada por aqui!'}
