@@ -1,13 +1,64 @@
-from hhttp import HTTPStatus
+from http import HTTPStatus
 
-from fastapi.testeclient import TestClient
 
-from test_root_deve_retornar_ola_mundo():
-
-#Arrange
-    client = TestClient(app)
-#Act    
+def test_root_deve_retornar_ola_mundo(client):
     response = client.get('/')
-#Assert
-    assert response.json() == {'message': 'Olá mundo!'}
+
     assert response.status_code == HTTPStatus.OK
+    assert response.json() == {'message': 'Olá mundo!'}
+
+
+def test_create_user(client):
+    response = client.post(
+        '/users/',
+        json={
+            'username': 'alice',
+            'email': 'alice@example.com',
+            'password': 'secret',
+        },
+    )
+
+    assert response.status_code == HTTPStatus.CREATED
+    assert response.json() == {
+        'username': 'alice',
+        'email': 'alice@example.com',
+        'id': 1,
+    }
+
+
+def test_read_users(client):
+    response = client.get('/users/')
+    assert response.status_code == HTTPStatus.OK
+    assert response.json() == {
+        'users': [
+            {
+                'username': 'alice',
+                'email': 'alice@example.com',
+                'id': 1,
+            }
+        ]
+    }
+
+
+def test_update_user(client):
+    response = client.put(
+        '/users/1',
+        json={
+            'username': 'alexander',
+            'email': 'alexanderlindao@example.com',
+            'password': 'mynewpassword',
+        },
+    )
+    assert response.status_code == HTTPStatus.OK
+    assert response.json() == {
+        'username': 'alexander',
+        'email': 'alexanderlindao@example.com',
+        'id': 1,
+    }
+
+
+def test_delete_user(client):
+    response = client.delete('/users/1')
+
+    assert response.status_code == HTTPStatus.OK
+    assert response.json() == {'message': 'User deleted'}
