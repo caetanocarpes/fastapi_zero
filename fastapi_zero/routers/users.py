@@ -1,6 +1,11 @@
 from http import HTTPStatus
 from typing import Annotated
 
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from fastapi_zero.database import get_session
 from fastapi_zero.models import User
 from fastapi_zero.schemas import (
@@ -14,10 +19,6 @@ from fastapi_zero.security import (
     get_current_user,
     get_password_hash,
 )
-from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy import select
-from sqlalchemy.exc import IntegrityError
-from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter(prefix='/users', tags=['users'])
 Session = Annotated[AsyncSession, Depends(get_session)]
