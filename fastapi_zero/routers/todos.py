@@ -1,10 +1,6 @@
 from http import HTTPStatus
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from fastapi_zero.database import get_session
 from fastapi_zero.models import Todo, User
 from fastapi_zero.schemas import (
@@ -16,6 +12,9 @@ from fastapi_zero.schemas import (
     TodoUpdate,
 )
 from fastapi_zero.security import get_current_user
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter()
 
